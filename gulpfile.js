@@ -87,7 +87,7 @@ gulp.task('concat-css', function() {
 		.pipe(rename('all.min.css')) // 重命名
 		.pipe(gulp.dest('app/dist/css'))
 })
-
+    
 gulp.task('default', ['del'], function() {
 	var jsFilter = filter('**/*.js', { restore: true })
 	var cssFilter = filter('**/*.css', { restore: true })
