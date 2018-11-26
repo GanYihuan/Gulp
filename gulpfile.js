@@ -15,105 +15,106 @@ var del = require('del') //
 var useref = require('gulp-useref') // 解析 html 的构建块
 var filter = require('gulp-filter') // 过滤
 
+/* 定义任务 */
 gulp.task('hello', function() {
-	console.log('hello gulp')
+  console.log('hello gulp')
 })
 
-// 复制文件到指定文件夹
+/* 复制文件到指定文件夹 */
+/**
+ * gulp.src(): 指定处理文件
+ * gulp.dest(): 目标路径, 处理后文件存储路径
+ * pipe(): 执行方法
+ */
 gulp.task('copy-indent', function() {
-	// gulp.src(): 需要改变文件的路径
-	// 所有文件 */*.*
-	// pipe(): 执行方法
-	gulp
-	gulp
-		// .src(['xml/*.xml', 'json/*.json', '!json/secre-*.json'])
-		.src('src/*.html')
-		.pipe(gulp.dest('dist'))
-		.pipe(connect.reload())
-	// images/**/* images目录下的所有子目录和所有东西(包含东西最多)
-	// images/*/*  images目录下的东西和子目录下的东西
-	// images/*.{png,jpg} images目录下的所有以png和jpg为后缀名的图片
+  gulp
+    .src('src/*.html')
+    .pipe(gulp.dest('dist'))
+    .pipe(connect.reload())
+  // images/**/* images目录下的所有子目录和所有东西(包含东西最多)
+  // images/*/*  images目录下的东西和子目录下的东西
+  // images/*.{png,jpg} images目录下的所有以png和jpg为后缀名的图片
 })
 
 // 默认任务
 gulp.task('default', function() {
-	console.log('default')
+  console.log('default')
 })
 
 // less 转换为 css
 gulp.task('less', function() {
-	gulp
-		.src('src/**/*.less')
-		.pipe(less())
-		// gulp.dest(): 目标路径, 处理后文件存储路径
-		.pipe(gulp.dest('dist/css'))
+  gulp
+    .src('src/**/*.less')
+    .pipe(less())
+    // gulp.dest(): 目标路径, 处理后文件存储路径
+    .pipe(gulp.dest('dist/css'))
 })
 
 // 监听 XX 文件, 发现有变动时, 启动 style 方法
 gulp.task('watch', function() {
-	gulp.watch('src/**/*.less', ['style'])
+  gulp.watch('src/**/*.less', ['style'])
 })
 
 // 设置本地任务, 定义 http 服务器, 默认监听 8080
 gulp.task('serve', function() {
-	connect.server({
-		// 服务器根目录
-		root: 'public',
-		// 实时刷新任务
-		livereload: true
-	})
-	gulp.watch('public/**/*.*', ['reload'])
+  connect.server({
+    // 服务器根目录
+    root: 'public',
+    // 实时刷新任务
+    livereload: true
+  })
+  gulp.watch('public/**/*.*', ['reload'])
 })
 
 gulp.task('reload', function() {
-	gulp.src('./**/*.*').pipe(connect.reload())
+  gulp.src('./**/*.*').pipe(connect.reload())
 })
 
 // css 自动添加前缀，整合，压缩
 gulp.task('concat-css', function() {
-	gulp
-		.src('app/src/css/*.css')
-		.pipe(concat('all.css')) // 合并 css 并命名为 all.css, pipe() 执行方法
-		.pipe(gulp.dest('app/dist/css')) // 目标路径, 处理后文件存储路径
-		.pipe(
-			autoprefixer({
-				// 自动添加前缀
-				browers: ['5%', 'Android >=2.3']
-			})
-		)
-		.pipe(rename('allAuto.css'))
-		.pipe(gulp.dest('app/dist/css'))
-		.pipe(minifyCSS()) // 压缩
-		.pipe(rename('all.min.css')) // 重命名
-		.pipe(gulp.dest('app/dist/css'))
+  gulp
+    .src('app/src/css/*.css')
+    .pipe(concat('all.css')) // 合并 css 并命名为 all.css
+    .pipe(gulp.dest('app/dist/css')) // 目标路径, 处理后文件存储路径
+    .pipe(
+      autoprefixer({
+        // 自动添加前缀
+        browers: ['5%', 'Android >=2.3']
+      })
+    )
+    .pipe(rename('allAuto.css'))
+    .pipe(gulp.dest('app/dist/css'))
+    .pipe(minifyCSS()) // 压缩
+    .pipe(rename('all.min.css')) // 重命名
+    .pipe(gulp.dest('app/dist/css'))
 })
-    
+
 gulp.task('default', ['del'], function() {
-	var jsFilter = filter('**/*.js', { restore: true })
-	var cssFilter = filter('**/*.css', { restore: true })
-	var htmlFilter = filter(['**/*.html'], { restore: true })
-	gulp
-		.src('/*.html')
-		.pipe(useref()) // 解析html中的构建块
-		.pipe(jsFilter) // 过滤所有js
-		.pipe(uglify()) // 压缩js
-		.pipe(jsFilter.restore)
-		.pipe(cssFilter) // 过滤所有css
-		.pipe(csso()) // 压缩优化css
-		.pipe(cssFilter.restore)
-		.pipe(
-			RevAll.revision({
-				// 生成版本号
-				dontRenameFile: ['.html'], // 不给 html 文件添加版本号
-				dontUpdateReference: ['.html'] // 不给文件里链接的html加版本号
-			})
-		)
-		.pipe(htmlFilter) // 过滤所有html
-		.pipe(htmlmini()) // 压缩html
-		.pipe(htmlFilter.restore)
-		.pipe(gulp.dest('/dist'))
+  var jsFilter = filter('**/*.js', { restore: true })
+  var cssFilter = filter('**/*.css', { restore: true })
+  var htmlFilter = filter(['**/*.html'], { restore: true })
+  gulp
+    .src('/*.html')
+    .pipe(useref()) // 解析 html 中的构建块
+    .pipe(jsFilter) // 过滤所有 js
+    .pipe(uglify()) // 压缩 js
+    .pipe(jsFilter.restore)
+    .pipe(cssFilter) // 过滤所有 css
+    .pipe(csso()) // 压缩优化 css
+    .pipe(cssFilter.restore)
+    .pipe(
+      RevAll.revision({
+        // 生成版本号
+        dontRenameFile: ['.html'], // 不给 html 文件添加版本号
+        dontUpdateReference: ['.html'] // 不给文件里链接的 html 加版本号
+      })
+    )
+    .pipe(htmlFilter) // 过滤所有 html
+    .pipe(htmlmini()) // 压缩 html
+    .pipe(htmlFilter.restore)
+    .pipe(gulp.dest('/dist'))
 })
 
 gulp.task('del', function() {
-	del('/dist') // 构建前先删除dist文件里的旧版本
+  del('/dist') // 构建前先删除 dist 文件里的旧版本
 })
