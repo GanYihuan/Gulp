@@ -38,7 +38,7 @@ let $ = require('gulp-load-plugins')() // 提前打包所有 gulp 插件, 可以
 ```txt
 js/app.js 指定确切的文件名
 js/*.js 某个目录所有后缀名为 js 的文件
-src(!js/app.js) 除了 js/app.js 以外的所有文件
+!js/app.js 除了 js/app.js 以外的所有文件
 images/**/* images 目录下的所有子目录和所有东西(包含东西最多)
 images/*/*  images 目录下的东西和子目录下的东西
 images/*.{png,jpg} images目录下的所有以png和jpg为后缀名的图片
@@ -147,7 +147,17 @@ gulp.task('less', function() {
 ## 监听, 实时刷新
 
 ```js
-// 监听, 实时刷新
+// watch(): 监视文件。一旦文件变动，就运行指定任务
+// watch 方法还可能触发以下事件。
+// end：回调函数运行完毕时触发。
+// error：发生错误时触发。
+// ready：当开始监听文件时触发。
+// nomatch：没有匹配的监听文件时触发。
+// watcher 对象还包含其他一些方法。
+// watcher.end() ：停止 watcher 对象，不会再调用任务或回调函数。
+// watcher.files() ：返回 watcher 对象监视的文件。
+// watcher.add(glob) ：增加所要监视的文件，它还可以附件第二个参数，表示回调函数。
+// watcher.remove(filepath) ：从 watcher 对象中移走一个监视的文件。
 gulp.task('watch', ['default'], function() {
   livereload.listen() // 开启监听
   gulp.watch('src/**/*.less', ['style']) // watch(): 监听 src/**/*.less 文件, 发现有变动时, 启动 style 方法
