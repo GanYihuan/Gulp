@@ -1,24 +1,25 @@
-﻿let gulp = require('gulp') // 将 gulp 插件包含进来
-let sass = require('gulp-sass') // 包含 sass 转换为 css 插件
-let less = require('gulp-less') // 包含 less 转换为 css 插件
-let connect = require('gulp-connect') // 包含服务器插件, 定义 http 服务器, 默认监听 8080
-let concat = require('gulp-concat') // 合并文件
-let rename = require('gulp-rename') // 重命名文件
-let uglify = require('gulp-uglify') // 压缩 js
-let minifyCSS = require('gulp-minify-css') // 压缩 css
-let cleanCSS = require('gulp-clean-css') // 压缩 css
-let imagemin = require('gulp-imagemin') // 优化图片
-let autoprefixer = require('gulp-autoprefixer') // 自动处理 css 前缀
-let htmlmin = require('gulp-htmlmin') // 压缩 html
-let htmlminify = require('gulp-html-minify') // 压缩 html
-let csso = require('gulp-cssno') // 压缩优化 css
-let revall = require('gul-rev-all') // 生成版本号
-let del = require('del') // 使用globs删除文件和文件夹
-let useref = require('gulp-useref') // 解析 html 的构建块
-let filter = require('gulp-filter') // 过滤
-let livereload = require('gulp-livereload') // 模块用于自动刷新浏览器
-let $ = require('gulp-load-plugins')() // 提前打包所有 gulp 插件, 可以加载 package.json 文件中所有的 gulp 模块
+﻿const gulp = require('gulp') // 将 gulp 插件包含进来
+const sass = require('gulp-sass') // 包含 sass 转换为 css 插件
+const less = require('gulp-less') // 包含 less 转换为 css 插件
+const connect = require('gulp-connect') // 包含服务器插件, 定义 http 服务器, 默认监听 8080
+const concat = require('gulp-concat') // 合并文件
+const rename = require('gulp-rename') // 重命名文件
+const uglify = require('gulp-uglify') // 压缩 js
+const minifyCSS = require('gulp-minify-css') // 压缩 css
+const cleanCSS = require('gulp-clean-css') // 压缩 css
+const imagemin = require('gulp-imagemin') // 优化图片
+const autoprefixer = require('gulp-autoprefixer') // 自动处理 css 前缀
+const htmlmin = require('gulp-htmlmin') // 压缩 html
+const htmlminify = require('gulp-html-minify') // 压缩 html
+const csso = require('gulp-cssno') // 压缩优化 css
+const revall = require('gul-rev-all') // 生成版本号
+const del = require('del') // 使用 globs 删除文件和文件夹
+const useref = require('gulp-useref') // 解析 html 的构建块
+const filter = require('gulp-filter') // 过滤
+const livereload = require('gulp-livereload') // 模块用于自动刷新浏览器
+const $ = require('gulp-load-plugins')() // 提前打包所有 gulp 插件, 可以加载 package.json 文件中所有的 gulp 模块
 
+// src()
 // js/app.js 指定确切的文件名
 // js/*.js 某个目录所有后缀名为 js 的文件
 // src(!js/app.js) 除了 js/app.js 以外的所有文件
@@ -26,16 +27,16 @@ let $ = require('gulp-load-plugins')() // 提前打包所有 gulp 插件, 可以
 // images/*/*  images 目录下的东西和子目录下的东西
 // images/*.{png,jpg} images目录下的所有以png和jpg为后缀名的图片
 
-// cwd 字段指定写入路径的基准目录，默认是当前目录；
-// mode 字段指定写入文件的权限，默认是 0777 。
 // dest(): 处理后文件存储路径, 临时输出文件到本地
+// cwd 字段指定写入路径的基准目录，默认是当前目录
+// mode 字段指定写入文件的权限，默认是 0777
 gulp.dest('build', {
   cwd: './app',
   mode: '0644'
 })
 
-// 默认任务, 先执行 'js', 'css', 'html', 'less' 任务后执行 default 任务
 // task(): 定义任务
+// 默认任务, 先执行 'js', 'css', 'html', 'less' 任务后执行 default 任务
 gulp.task('default', ['js', 'css', 'html', 'less'], function() {
   console.log('default')
 })
@@ -123,10 +124,8 @@ gulp.task('watch', ['default'], function() {
 // 设置本地任务, 定义 http 服务器, 默认监听 8080
 gulp.task('server', function() {
   connect.server({
-    // 服务器根目录
-    root: 'public',
-    // 实时刷新任务
-    livereload: true,
+    root: 'public', // 服务器根目录
+    livereload: true, // 实时刷新任务
     port: 5000
   })
   open('http://localhost:5000/') // 自动打开连接
@@ -146,8 +145,7 @@ gulp.task('concat-css', function() {
     .pipe(gulp.dest('app/dist/css')) // 临时输出文件到本地
     .pipe(
       autoprefixer({
-        // 自动添加前缀
-        browers: ['5%', 'Android >=2.3']
+        browers: ['5%', 'Android >=2.3'] // 自动添加前缀
       })
     )
     .pipe(rename('allAuto.css'))
@@ -163,9 +161,9 @@ gulp.task('del', function() {
 })
 
 gulp.task('default', ['del'], function() {
-  let jsFilter = filter('**/*.js', { restore: true })
-  let cssFilter = filter('**/*.css', { restore: true })
-  let htmlFilter = filter(['**/*.html'], { restore: true })
+  const jsFilter = filter('**/*.js', { restore: true })
+  const cssFilter = filter('**/*.css', { restore: true })
+  const htmlFilter = filter(['**/*.html'], { restore: true })
   return gulp
     .src('/*.html')
     .pipe(useref()) // 解析 html 中的构建块
